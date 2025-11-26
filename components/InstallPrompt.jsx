@@ -45,6 +45,13 @@ export function InstallPrompt() {
     }
   };
 
+  // Force show on mobile for debugging/fallback if event doesn't fire immediately
+  // This is a heuristic: if it's a mobile device and not standalone, show something.
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+
   if (isStandalone) return null;
 
   if (isIOS) {
@@ -68,7 +75,8 @@ export function InstallPrompt() {
     );
   }
 
-  if (!deferredPrompt) return null;
+  // Show if we have the prompt OR if we are on mobile (as a fallback/help)
+  if (!deferredPrompt && !isMobile) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 bg-background border border-border p-4 rounded-lg shadow-lg z-50 flex items-center justify-between animate-in slide-in-from-bottom-5">
@@ -79,13 +87,26 @@ export function InstallPrompt() {
         <div>
           <p className="font-medium text-sm">Instalar Aplicación</p>
           <p className="text-xs text-muted-foreground">
-            Accede más rápido desde tu pantalla de inicio
+            {deferredPrompt
+              ? "Accede más rápido desde tu pantalla de inicio"
+              : "Para instalar, usa el menú de tu navegador -> Instalar App"}
           </p>
         </div>
       </div>
-      <Button size="sm" onClick={handleInstall}>
-        Instalar
-      </Button>
+      {deferredPrompt && (
+        <Button size="sm" onClick={handleInstall}>
+          Instalar
+        </Button>
+      )}
+      {!deferredPrompt && (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => setDeferredPrompt(null)}
+        >
+          Entendido
+        </Button>
+      )}
     </div>
   );
 }
