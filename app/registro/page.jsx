@@ -17,7 +17,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function RegistroPage() {
+import { Suspense } from "react";
+
+function RegistroContent() {
   const {
     register,
     handleSubmit,
@@ -405,5 +407,13 @@ export default function RegistroPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function RegistroPage() {
+  return (
+    <Suspense fallback={<div>Cargando formulario...</div>}>
+      <RegistroContent />
+    </Suspense>
   );
 }
