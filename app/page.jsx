@@ -18,7 +18,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { RegistrationSuccessModal } from "@/components/postulacion/RegistrationSuccessModal";
 import { InstallPrompt } from "@/components/InstallPrompt";
 
-export default function LandingPage() {
+import { Suspense } from "react";
+
+function LandingContent() {
   const [modalidades, setModalidades] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -263,5 +265,13 @@ export default function LandingPage() {
 
       <InstallPrompt />
     </div>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <LandingContent />
+    </Suspense>
   );
 }
