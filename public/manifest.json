@@ -1,0 +1,21 @@
+{
+  "name": "SIREM - Sistema de Reclutamiento Militar",
+  "short_name": "SIREM",
+  "description": "Sistema de Reclutamiento Militar del Estado Plurinacional de Bolivia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/images/image.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/image.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
