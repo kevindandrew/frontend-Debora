@@ -40,6 +40,7 @@ const rolColors = {
   MEDICO: "bg-blue-50 text-blue-700",
   SUPERVISOR: "bg-amber-50 text-amber-700",
   POSTULANTE: "bg-slate-100 text-slate-700",
+  DIRECTOR: "bg-indigo-50 text-indigo-700",
 };
 
 export default function UsuariosPage() {
@@ -63,7 +64,7 @@ export default function UsuariosPage() {
   const fetchUsuarios = async () => {
     try {
       const data = await adminService.getUsuarios();
-      setUsuarios(data);
+      setUsuarios(data.filter((u) => u.rol !== "LICENCIADO"));
     } catch (error) {
       console.error(error);
       toast.error("Error al cargar usuarios");
@@ -198,6 +199,7 @@ export default function UsuariosPage() {
                       <SelectItem value="JEFE_UNIDAD">
                         Jefe de Unidad
                       </SelectItem>
+                      <SelectItem value="DIRECTOR">Director</SelectItem>
                       <SelectItem value="MEDICO">Médico</SelectItem>
                       <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
                     </SelectContent>

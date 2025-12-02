@@ -27,6 +27,7 @@ export function AuthProvider({ children }) {
           ...decoded,
           ...storedUser,
           rol: decoded.rol || storedUser?.rol, // Asegurar que el rol esté disponible
+          unidad_id: decoded.unidad_id || storedUser?.unidad_id,
         });
         setIsAuthenticated(true);
       } catch (error) {
@@ -49,6 +50,7 @@ export function AuthProvider({ children }) {
         rol: data.rol,
         username: username,
         nombre: username, // Usamos username como nombre por ahora si no viene más info
+        unidad_id: data.unidad_id,
       };
 
       localStorage.setItem("user", JSON.stringify(userData));

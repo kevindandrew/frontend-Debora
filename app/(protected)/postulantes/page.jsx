@@ -55,17 +55,34 @@ export default function PostulantesPage() {
     estado: "",
   });
 
-  const canRegister = ["ADMINISTRADOR", "JEFE_UNIDAD"].includes(user?.rol);
+  const canRegister = ["ADMINISTRADOR", "JEFE_UNIDAD", "DIRECTOR"].includes(
+    user?.rol
+  );
 
   useEffect(() => {
+    if (
+      user &&
+      !["ADMINISTRADOR", "JEFE_UNIDAD", "DIRECTOR"].includes(user.rol)
+    ) {
+      router.push("/mis-tramites");
+      return;
+    }
     fetchPostulantes();
-  }, [filters]);
+  }, [filters, user, router]);
 
   const fetchPostulantes = async () => {
     try {
       const activeFilters = {};
       if (filters.gestion) activeFilters.gestion = filters.gestion;
       if (filters.estado) activeFilters.estado = filters.estado;
+
+      // Filtrar por unidad para roles específicos
+      if (
+        ["JEFE_UNIDAD", "SUPERVISOR", "MEDICO"].includes(user?.rol) &&
+        user?.unidad_id
+      ) {
+        activeFilters.unidad_id = user.unidad_id;
+      }
 
       const data = await postulantesService.getPostulantes(activeFilters);
       setPostulantes(data);

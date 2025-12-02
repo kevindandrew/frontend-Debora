@@ -19,6 +19,7 @@ import {
   Package,
   Settings,
   BarChart,
+  Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -32,6 +33,17 @@ const menuItems = {
     { href: "/modalidades", label: "Modalidades", icon: Settings },
     { href: "/dashboard/tramites", label: "Gestión Trámites", icon: FileText },
     { href: "/dashboard/materiales", label: "Materiales", icon: Package },
+    { href: "/licenciados", label: "Licenciados", icon: Award },
+  ],
+  DIRECTOR: [
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/postulantes", label: "Postulantes", icon: Users },
+    { href: "/unidades", label: "Unidades", icon: Building2 },
+    { href: "/usuarios", label: "Usuarios", icon: UserCircle },
+    { href: "/modalidades", label: "Modalidades", icon: Settings },
+    { href: "/dashboard/tramites", label: "Gestión Trámites", icon: FileText },
+    { href: "/dashboard/materiales", label: "Materiales", icon: Package },
+    { href: "/licenciados", label: "Licenciados", icon: Award },
   ],
   MEDICO: [
     { href: "/evaluaciones", label: "Evaluaciones", icon: ClipboardCheck },
@@ -48,10 +60,7 @@ const menuItems = {
   JEFE_UNIDAD: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/postulantes", label: "Postulantes", icon: Users },
-    { href: "/unidades", label: "Unidades", icon: Building2 },
-    { href: "/usuarios", label: "Usuarios", icon: UserCircle },
     { href: "/modalidades", label: "Modalidades", icon: Settings },
-    { href: "/dashboard/tramites", label: "Gestión Trámites", icon: FileText },
     { href: "/dashboard/materiales", label: "Materiales", icon: Package },
   ],
   LICENCIADO: [

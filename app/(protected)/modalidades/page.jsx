@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useAuth } from "@/components/auth-context";
 import { modalidadesService } from "@/services/modalidades";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,7 @@ import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 
 export default function ModalidadesPage() {
+  const { user } = useAuth();
   const [modalidades, setModalidades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editingModalidad, setEditingModalidad] = useState(null);
@@ -220,14 +222,16 @@ export default function ModalidadesPage() {
                   </div>
                 </div>
 
-                <Button
-                  onClick={() => handleEdit(modalidad)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  <Settings className="h-4 w-4 mr-2" />
-                  Configurar Fechas
-                </Button>
+                {["ADMINISTRADOR", "DIRECTOR"].includes(user?.rol) && (
+                  <Button
+                    onClick={() => handleEdit(modalidad)}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configurar Fechas
+                  </Button>
+                )}
               </CardContent>
             </Card>
           ))}

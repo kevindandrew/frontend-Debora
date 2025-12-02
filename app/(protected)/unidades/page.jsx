@@ -272,6 +272,78 @@ export default function UnidadesPage() {
                     </span>
                   </div>
 
+                  {/* Personal Asignado Section */}
+                  <div className="pt-4 border-t mt-4">
+                    <h4 className="text-xs font-semibold uppercase text-muted-foreground mb-2">
+                      Personal Asignado
+                    </h4>
+
+                    {!unidad.jefes_unidad?.length &&
+                    !unidad.medicos?.length &&
+                    !unidad.supervisores?.length ? (
+                      <p className="text-xs text-muted-foreground italic">
+                        Sin personal asignado
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {unidad.jefes_unidad?.map((p) => (
+                          <div
+                            key={`jefe-${p.id}`}
+                            className="flex justify-between items-center text-sm"
+                          >
+                            <span className="text-muted-foreground text-xs">
+                              Jefe Unidad
+                            </span>
+                            <span
+                              className="font-medium truncate max-w-[150px]"
+                              title={`${p.nombres} ${p.paterno} ${
+                                p.materno || ""
+                              }`}
+                            >
+                              {p.nombres} {p.paterno} {p.materno || ""}
+                            </span>
+                          </div>
+                        ))}
+                        {unidad.medicos?.map((p) => (
+                          <div
+                            key={`medico-${p.id}`}
+                            className="flex justify-between items-center text-sm"
+                          >
+                            <span className="text-muted-foreground text-xs">
+                              Médico
+                            </span>
+                            <span
+                              className="font-medium truncate max-w-[150px]"
+                              title={`${p.nombres} ${p.paterno} ${
+                                p.materno || ""
+                              }`}
+                            >
+                              {p.nombres} {p.paterno} {p.materno || ""}
+                            </span>
+                          </div>
+                        ))}
+                        {unidad.supervisores?.map((p) => (
+                          <div
+                            key={`sup-${p.id}`}
+                            className="flex justify-between items-center text-sm"
+                          >
+                            <span className="text-muted-foreground text-xs">
+                              Supervisor
+                            </span>
+                            <span
+                              className="font-medium truncate max-w-[150px]"
+                              title={`${p.nombres} ${p.paterno} ${
+                                p.materno || ""
+                              }`}
+                            >
+                              {p.nombres} {p.paterno} {p.materno || ""}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
                   <Button
                     onClick={() => openAsignarDialog(unidad)}
                     className="w-full mt-3"

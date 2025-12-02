@@ -157,7 +157,9 @@ export default function PostulanteDetallePage() {
   };
 
   const requiredDocs = getRequiredDocs(postulante.modalidad);
-  const canDecide = ["ADMINISTRADOR", "JEFE_UNIDAD"].includes(user?.rol);
+  const canDecide = ["ADMINISTRADOR", "JEFE_UNIDAD", "DIRECTOR"].includes(
+    user?.rol
+  );
 
   // Verificar requisitos de evaluación
   const medicaAprobada =
