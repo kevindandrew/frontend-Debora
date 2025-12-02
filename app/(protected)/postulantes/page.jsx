@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserPlus, Filter } from "lucide-react";
+import { UserPlus, Filter, FileText } from "lucide-react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -193,12 +193,28 @@ export default function PostulantesPage() {
           </p>
         </div>
 
-        {canRegister && (
-          <Button onClick={() => setIsRegistroDialogOpen(true)}>
-            <UserPlus className="h-4 w-4 mr-2" />
-            Añadir Nuevo Postulante
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => toast.info("Funcionalidad próximamente")}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Reporte Inscritos
           </Button>
-        )}
+          <Button
+            variant="outline"
+            onClick={() => toast.info("Funcionalidad próximamente")}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Reporte Licenciados
+          </Button>
+          {canRegister && (
+            <Button onClick={() => setIsRegistroDialogOpen(true)}>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Añadir Nuevo Postulante
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Filters */}

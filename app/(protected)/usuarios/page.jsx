@@ -25,6 +25,7 @@ import {
   UserCircle,
   Trash2,
   Loader2,
+  FileText,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -125,117 +126,130 @@ export default function UsuariosPage() {
           </p>
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <UserPlus className="h-4 w-4 mr-2" />
-              Nuevo Usuario
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Crear Nuevo Usuario</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleCreate} className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <Label htmlFor="nombres">Nombres</Label>
-                <Input
-                  id="nombres"
-                  value={formData.nombres}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nombres: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="paterno">Apellido Paterno</Label>
-                  <Input
-                    id="paterno"
-                    value={formData.paterno}
-                    onChange={(e) =>
-                      setFormData({ ...formData, paterno: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="materno">Apellido Materno</Label>
-                  <Input
-                    id="materno"
-                    value={formData.materno}
-                    onChange={(e) =>
-                      setFormData({ ...formData, materno: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="ci">CI</Label>
-                  <Input
-                    id="ci"
-                    value={formData.ci}
-                    onChange={(e) =>
-                      setFormData({ ...formData, ci: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="rol">Rol</Label>
-                  <Select
-                    value={formData.rol}
-                    onValueChange={(v) => setFormData({ ...formData, rol: v })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="ADMINISTRADOR">
-                        Administrador
-                      </SelectItem>
-                      <SelectItem value="JEFE_UNIDAD">
-                        Jefe de Unidad
-                      </SelectItem>
-                      <SelectItem value="DIRECTOR">Director</SelectItem>
-                      <SelectItem value="MEDICO">Médico</SelectItem>
-                      <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="username">Usuario (Login)</Label>
-                <Input
-                  id="username"
-                  value={formData.username}
-                  onChange={(e) =>
-                    setFormData({ ...formData, username: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={creating}>
-                {creating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Crear Usuario
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => toast.info("Funcionalidad próximamente")}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Reporte Usuarios
+          </Button>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Nuevo Usuario
               </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Crear Nuevo Usuario</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleCreate} className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="nombres">Nombres</Label>
+                  <Input
+                    id="nombres"
+                    value={formData.nombres}
+                    onChange={(e) =>
+                      setFormData({ ...formData, nombres: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="paterno">Apellido Paterno</Label>
+                    <Input
+                      id="paterno"
+                      value={formData.paterno}
+                      onChange={(e) =>
+                        setFormData({ ...formData, paterno: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="materno">Apellido Materno</Label>
+                    <Input
+                      id="materno"
+                      value={formData.materno}
+                      onChange={(e) =>
+                        setFormData({ ...formData, materno: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="ci">CI</Label>
+                    <Input
+                      id="ci"
+                      value={formData.ci}
+                      onChange={(e) =>
+                        setFormData({ ...formData, ci: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rol">Rol</Label>
+                    <Select
+                      value={formData.rol}
+                      onValueChange={(v) =>
+                        setFormData({ ...formData, rol: v })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ADMINISTRADOR">
+                          Administrador
+                        </SelectItem>
+                        <SelectItem value="JEFE_UNIDAD">
+                          Jefe de Unidad
+                        </SelectItem>
+                        <SelectItem value="DIRECTOR">Director</SelectItem>
+                        <SelectItem value="MEDICO">Médico</SelectItem>
+                        <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="username">Usuario (Login)</Label>
+                  <Input
+                    id="username"
+                    value={formData.username}
+                    onChange={(e) =>
+                      setFormData({ ...formData, username: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Contraseña</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={creating}>
+                  {creating && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  Crear Usuario
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="bg-card rounded-xl border border-border overflow-hidden">

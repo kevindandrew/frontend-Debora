@@ -20,7 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building2, MapPin, Loader2, Plus, UserPlus } from "lucide-react";
+import {
+  Building2,
+  MapPin,
+  Loader2,
+  Plus,
+  UserPlus,
+  FileText,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -151,95 +158,109 @@ export default function UnidadesPage() {
           <p className="text-muted-foreground">Gestión de centros militares</p>
         </div>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <Plus className="h-4 w-4 mr-2" />
-              Nueva Unidad
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Registrar Unidad Militar</DialogTitle>
-              <DialogDescription>
-                Complete los datos para registrar una nueva unidad de
-                reclutamiento.
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleCreate} className="space-y-4 pt-4">
-              <div className="space-y-2">
-                <Label htmlFor="nombre">Nombre de la Unidad</Label>
-                <Input
-                  id="nombre"
-                  placeholder="Ej: RI-1 COLORADOS"
-                  value={formData.nombre}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nombre: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="departamento">Departamento</Label>
-                  <Input
-                    id="departamento"
-                    placeholder="La Paz"
-                    value={formData.departamento}
-                    onChange={(e) =>
-                      setFormData({ ...formData, departamento: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="provincia">Provincia</Label>
-                  <Input
-                    id="provincia"
-                    placeholder="Murillo"
-                    value={formData.provincia}
-                    onChange={(e) =>
-                      setFormData({ ...formData, provincia: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="direccion">Dirección</Label>
-                <Input
-                  id="direccion"
-                  placeholder="Av. Saavedra esq. Calle 1"
-                  value={formData.direccion}
-                  onChange={(e) =>
-                    setFormData({ ...formData, direccion: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="capacidad">Capacidad Máxima</Label>
-                <Input
-                  id="capacidad"
-                  type="number"
-                  placeholder="Ej: 500"
-                  value={formData.capacidad_maxima}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      capacidad_maxima: e.target.value,
-                    })
-                  }
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full" disabled={creating}>
-                {creating && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Registrar Unidad
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => toast.info("Funcionalidad próximamente")}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Reporte Personal
+          </Button>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Plus className="h-4 w-4 mr-2" />
+                Nueva Unidad
               </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Registrar Unidad Militar</DialogTitle>
+                <DialogDescription>
+                  Complete los datos para registrar una nueva unidad de
+                  reclutamiento.
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleCreate} className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="nombre">Nombre de la Unidad</Label>
+                  <Input
+                    id="nombre"
+                    placeholder="Ej: RI-1 COLORADOS"
+                    value={formData.nombre}
+                    onChange={(e) =>
+                      setFormData({ ...formData, nombre: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="departamento">Departamento</Label>
+                    <Input
+                      id="departamento"
+                      placeholder="La Paz"
+                      value={formData.departamento}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          departamento: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="provincia">Provincia</Label>
+                    <Input
+                      id="provincia"
+                      placeholder="Murillo"
+                      value={formData.provincia}
+                      onChange={(e) =>
+                        setFormData({ ...formData, provincia: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="direccion">Dirección</Label>
+                  <Input
+                    id="direccion"
+                    placeholder="Av. Saavedra esq. Calle 1"
+                    value={formData.direccion}
+                    onChange={(e) =>
+                      setFormData({ ...formData, direccion: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="capacidad">Capacidad Máxima</Label>
+                  <Input
+                    id="capacidad"
+                    type="number"
+                    placeholder="Ej: 500"
+                    value={formData.capacidad_maxima}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        capacidad_maxima: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={creating}>
+                  {creating && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  Registrar Unidad
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {loading ? (
