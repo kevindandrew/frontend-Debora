@@ -77,10 +77,18 @@ export default function PostulantesPage() {
       if (filters.estado) activeFilters.estado = filters.estado;
 
       // Filtrar por unidad para roles específicos
-      if (
-        ["JEFE_UNIDAD", "SUPERVISOR", "MEDICO"].includes(user?.rol) &&
-        user?.unidad_id
-      ) {
+      // Filtrar por unidad para roles específicos
+      if (["JEFE_UNIDAD", "SUPERVISOR", "MEDICO"].includes(user?.rol)) {
+        if (!user?.unidad_id) {
+          // Si el usuario tiene rol restringido pero no tiene unidad asignada,
+          // no mostramos nada para evitar mostrar todos los postulantes.
+          setPostulantes([]);
+          setLoading(false);
+          toast.error(
+            "No tienes una unidad asignada. Contacta al administrador."
+          );
+          return;
+        }
         activeFilters.unidad_id = user.unidad_id;
       }
 
