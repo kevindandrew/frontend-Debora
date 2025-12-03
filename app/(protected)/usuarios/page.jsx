@@ -34,6 +34,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const rolColors = {
   ADMINISTRADOR: "bg-primary/10 text-primary",
@@ -116,6 +118,47 @@ export default function UsuariosPage() {
     }
   };
 
+  const handleDownloadUsuarios = () => {
+    try {
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("Reporte de Usuarios del Sistema", 14, 22);
+      doc.setFontSize(11);
+      doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 14, 30);
+
+      const columns = [
+        { header: "Usuario", dataKey: "username" },
+        { header: "Nombre Completo", dataKey: "nombre" },
+        { header: "CI", dataKey: "ci" },
+        { header: "Rol", dataKey: "rol" },
+      ];
+
+      const rows = usuarios.map((u) => ({
+        username: u.username,
+        nombre:
+          u.nombre_completo ||
+          `${u.nombres} ${u.paterno} ${u.materno || ""}`.trim(),
+        ci: u.ci,
+        rol: u.rol,
+      }));
+
+      autoTable(doc, {
+        head: [columns.map((c) => c.header)],
+        body: rows.map((r) => columns.map((c) => r[c.dataKey])),
+        startY: 40,
+        styles: { fontSize: 10, cellPadding: 3 },
+        headStyles: { fillColor: [66, 66, 66] },
+      });
+
+      doc.save("reporte_usuarios.pdf");
+      toast.success("Reporte descargado correctamente");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al generar reporte");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -127,10 +170,7 @@ export default function UsuariosPage() {
         </div>
 
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => toast.info("Funcionalidad próximamente")}
-          >
+          <Button variant="outline" onClick={handleDownloadUsuarios}>
             <FileText className="h-4 w-4 mr-2" />
             Reporte Usuarios
           </Button>

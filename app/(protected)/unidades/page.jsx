@@ -30,6 +30,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function UnidadesPage() {
   const [unidades, setUnidades] = useState([]);
@@ -148,6 +150,57 @@ export default function UnidadesPage() {
     return rol === "MEDICO" || rol === "SUPERVISOR" || rol === "JEFE_UNIDAD";
   });
 
+  const handleDownloadPersonal = () => {
+    try {
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("Reporte de Unidades y Personal", 14, 22);
+      doc.setFontSize(11);
+      doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 14, 30);
+
+      const columns = [
+        { header: "Unidad", dataKey: "nombre" },
+        { header: "Ubicación", dataKey: "ubicacion" },
+        { header: "Capacidad", dataKey: "capacidad" },
+        { header: "Personal Asignado", dataKey: "personal" },
+      ];
+
+      const rows = unidades.map((u) => {
+        const personal = [
+          ...(u.jefes_unidad || []).map(
+            (p) => `Jefe: ${p.nombres} ${p.paterno}`
+          ),
+          ...(u.medicos || []).map((p) => `Médico: ${p.nombres} ${p.paterno}`),
+          ...(u.supervisores || []).map(
+            (p) => `Sup: ${p.nombres} ${p.paterno}`
+          ),
+        ].join("\n");
+
+        return {
+          nombre: u.nombre,
+          ubicacion: `${u.departamento}, ${u.provincia}`,
+          capacidad: u.capacidad_maxima,
+          personal: personal || "Sin asignar",
+        };
+      });
+
+      autoTable(doc, {
+        head: [columns.map((c) => c.header)],
+        body: rows.map((r) => columns.map((c) => r[c.dataKey])),
+        startY: 40,
+        styles: { fontSize: 10, cellPadding: 3 },
+        headStyles: { fillColor: [66, 66, 66] },
+      });
+
+      doc.save("reporte_unidades_personal.pdf");
+      toast.success("Reporte descargado correctamente");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al generar reporte");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -159,10 +212,7 @@ export default function UnidadesPage() {
         </div>
 
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => toast.info("Funcionalidad próximamente")}
-          >
+          <Button variant="outline" onClick={handleDownloadPersonal}>
             <FileText className="h-4 w-4 mr-2" />
             Reporte Personal
           </Button>

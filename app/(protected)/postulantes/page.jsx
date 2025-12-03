@@ -34,6 +34,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default function PostulantesPage() {
   const router = useRouter();
@@ -181,6 +183,79 @@ export default function PostulantesPage() {
     }
   };
 
+  const generatePDF = (title, data, filename) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text(title, 14, 22);
+    doc.setFontSize(11);
+    doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 14, 30);
+
+    const columns = [
+      { header: "Nombre Completo", dataKey: "nombre_completo" },
+      { header: "CI", dataKey: "ci" },
+      { header: "Estado", dataKey: "estado" },
+      { header: "Código", dataKey: "codigo" },
+    ];
+
+    const rows = data.map((p) => ({
+      nombre_completo: p.nombre_completo || p.nombre || "Sin nombre",
+      ci: p.ci,
+      estado: p.estado,
+      codigo: p.codigo_inscripcion,
+    }));
+
+    autoTable(doc, {
+      head: [columns.map((c) => c.header)],
+      body: rows.map((r) => columns.map((c) => r[c.dataKey])),
+      startY: 40,
+      styles: { fontSize: 10, cellPadding: 3 },
+      headStyles: { fillColor: [66, 66, 66] },
+    });
+
+    doc.save(filename);
+  };
+
+  const handleDownloadInscritos = async () => {
+    try {
+      const toastId = toast.loading("Generando reporte...");
+      const data = await postulantesService.getPostulantes({
+        estado: "INSCRITO",
+        gestion: filters.gestion,
+      });
+      generatePDF(
+        `Reporte de Inscritos - Gestión ${filters.gestion}`,
+        data,
+        "reporte_inscritos.pdf"
+      );
+      toast.dismiss(toastId);
+      toast.success("Reporte descargado correctamente");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al generar reporte");
+    }
+  };
+
+  const handleDownloadLicenciados = async () => {
+    try {
+      const toastId = toast.loading("Generando reporte...");
+      const data = await postulantesService.getPostulantes({
+        estado: "LICENCIADO",
+        gestion: filters.gestion,
+      });
+      generatePDF(
+        `Reporte de Licenciados - Gestión ${filters.gestion}`,
+        data,
+        "reporte_licenciados.pdf"
+      );
+      toast.dismiss(toastId);
+      toast.success("Reporte descargado correctamente");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al generar reporte");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -194,17 +269,11 @@ export default function PostulantesPage() {
         </div>
 
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => toast.info("Funcionalidad próximamente")}
-          >
+          <Button variant="outline" onClick={handleDownloadInscritos}>
             <FileText className="h-4 w-4 mr-2" />
             Reporte Inscritos
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => toast.info("Funcionalidad próximamente")}
-          >
+          <Button variant="outline" onClick={handleDownloadLicenciados}>
             <FileText className="h-4 w-4 mr-2" />
             Reporte Licenciados
           </Button>
