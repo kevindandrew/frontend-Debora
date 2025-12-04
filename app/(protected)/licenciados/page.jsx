@@ -3,22 +3,16 @@
 import { useEffect, useState } from "react";
 import { adminService } from "@/services/admin";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   UserPlus,
   MoreHorizontal,
@@ -48,6 +42,8 @@ const rolColors = {
 export default function LicenciadosPage() {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   const fetchUsuarios = async () => {
     try {
@@ -65,15 +61,23 @@ export default function LicenciadosPage() {
     fetchUsuarios();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!confirm("¿Está seguro de eliminar este licenciado?")) return;
+  const handleDeleteClick = (usuario) => {
+    setUserToDelete(usuario);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!userToDelete) return;
     try {
-      await adminService.deleteUsuario(id);
+      await adminService.deleteUsuario(userToDelete.id);
       toast.success("Licenciado eliminado");
       fetchUsuarios();
     } catch (error) {
       console.error(error);
       toast.error("Error al eliminar licenciado");
+    } finally {
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
     }
   };
 
@@ -152,7 +156,7 @@ export default function LicenciadosPage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           className="text-destructive"
-                          onClick={() => handleDelete(usuario.id)}
+                          onClick={() => handleDeleteClick(usuario)}
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Eliminar
@@ -171,6 +175,31 @@ export default function LicenciadosPage() {
           No se encontraron licenciados
         </div>
       )}
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Está absolutamente seguro?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. Esto eliminará permanentemente
+              al licenciado{" "}
+              <span className="font-bold text-foreground">
+                {userToDelete?.nombre_completo}
+              </span>{" "}
+              y eliminará sus datos de nuestros servidores.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Eliminar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
