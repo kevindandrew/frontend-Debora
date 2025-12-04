@@ -162,6 +162,7 @@ export function UsuarioForm({ onSuccess, onCancel }) {
             onChange={(e) => handleChange("ci", e.target.value)}
             placeholder="Ej: 12345678"
             className={errors.ci ? "border-red-500" : ""}
+            maxLength={15}
           />
           {errors.ci && <p className="text-sm text-red-500">{errors.ci}</p>}
         </div>

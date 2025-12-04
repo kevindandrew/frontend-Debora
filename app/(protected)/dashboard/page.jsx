@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth-context";
 import { adminService } from "@/services/admin";
+import { Button } from "@/components/ui/button";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   Card,
   CardContent,
@@ -25,8 +28,10 @@ import {
   ClipboardCheck,
   Award,
   Activity,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
+import { UserEvolutionChart } from "./_components/UserEvolutionChart";
 
 const StatsCard = ({ title, value, icon: Icon, variant = "default" }) => {
   const variants = {
@@ -85,6 +90,117 @@ export default function DashboardPage() {
     }
   };
 
+  const handleDownloadReport = () => {
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.width;
+
+      // Title
+      doc.setFontSize(18);
+      doc.text("Reporte General del Sistema", 14, 22);
+      doc.setFontSize(11);
+      doc.text(`Gestión: ${gestion}`, 14, 30);
+      doc.text(`Fecha de emisión: ${new Date().toLocaleDateString()}`, 14, 36);
+
+      // Section 1: General Stats
+      doc.setFontSize(14);
+      doc.text("Resumen General", 14, 48);
+
+      const generalData = [
+        ["Total Postulantes", stats?.total || 0],
+        ["Inscritos", stats?.inscritos || 0],
+        ["En Evaluación", stats?.en_evaluacion || 0],
+        ["Aptos", stats?.aptos || 0],
+        ["No Aptos", stats?.no_aptos || 0],
+        ["Licenciados", stats?.licenciados || 0],
+      ];
+
+      autoTable(doc, {
+        head: [["Métrica", "Cantidad"]],
+        body: generalData,
+        startY: 52,
+        theme: "striped",
+        headStyles: { fillColor: [66, 66, 66] },
+      });
+
+      // Section 2: Distribution by State
+      let finalY = doc.lastAutoTable.finalY + 15;
+      doc.setFontSize(14);
+      doc.text("Distribución por Estado", 14, finalY);
+
+      const total = stats?.total || 1; // Avoid division by zero
+      const stateData = [
+        [
+          "Inscritos",
+          stats?.inscritos || 0,
+          `${(((stats?.inscritos || 0) / total) * 100).toFixed(1)}%`,
+        ],
+        [
+          "En Evaluación",
+          stats?.en_evaluacion || 0,
+          `${(((stats?.en_evaluacion || 0) / total) * 100).toFixed(1)}%`,
+        ],
+        [
+          "Aptos",
+          stats?.aptos || 0,
+          `${(((stats?.aptos || 0) / total) * 100).toFixed(1)}%`,
+        ],
+        [
+          "No Aptos",
+          stats?.no_aptos || 0,
+          `${(((stats?.no_aptos || 0) / total) * 100).toFixed(1)}%`,
+        ],
+        [
+          "Licenciados",
+          stats?.licenciados || 0,
+          `${(((stats?.licenciados || 0) / total) * 100).toFixed(1)}%`,
+        ],
+      ];
+
+      autoTable(doc, {
+        head: [["Estado", "Cantidad", "Porcentaje"]],
+        body: stateData,
+        startY: finalY + 4,
+        theme: "striped",
+        headStyles: { fillColor: [66, 66, 66] },
+      });
+
+      // Section 3: Distribution by Modality
+      if (stats?.por_modalidad && stats.por_modalidad.length > 0) {
+        finalY = doc.lastAutoTable.finalY + 15;
+
+        // Check if we need a new page
+        if (finalY > 250) {
+          doc.addPage();
+          finalY = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.text("Distribución por Modalidad", 14, finalY);
+
+        const modalityData = stats.por_modalidad.map((m) => [
+          m.modalidad,
+          m.total,
+          `${((m.total / total) * 100).toFixed(1)}%`,
+        ]);
+
+        autoTable(doc, {
+          head: [["Modalidad", "Cantidad", "Porcentaje"]],
+          body: modalityData,
+          startY: finalY + 4,
+          theme: "striped",
+          headStyles: { fillColor: [66, 66, 66] },
+        });
+      }
+
+      doc.save(`reporte_dashboard_${gestion}.pdf`);
+      toast.success("Reporte descargado correctamente");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Error al generar el reporte PDF");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
@@ -111,19 +227,25 @@ export default function DashboardPage() {
             Bienvenido, {user?.nombre || user?.username} ({user?.rol})
           </p>
         </div>
-        <Select
-          value={gestion.toString()}
-          onValueChange={(v) => setGestion(parseInt(v))}
-        >
-          <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Gestión" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="2024">Gestión 2024</SelectItem>
-            <SelectItem value="2025">Gestión 2025</SelectItem>
-            <SelectItem value="2026">Gestión 2026</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleDownloadReport}>
+            <FileText className="h-4 w-4 mr-2" />
+            Reporte General
+          </Button>
+          <Select
+            value={gestion.toString()}
+            onValueChange={(v) => setGestion(parseInt(v))}
+          >
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Gestión" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="2024">Gestión 2024</SelectItem>
+              <SelectItem value="2025">Gestión 2025</SelectItem>
+              <SelectItem value="2026">Gestión 2026</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Cards de Estadísticas */}
@@ -165,6 +287,9 @@ export default function DashboardPage() {
           variant="purple"
         />
       </div>
+
+      {/* Gráfico de Evolución */}
+      <UserEvolutionChart gestion={gestion} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Distribución por Estado */}

@@ -20,6 +20,7 @@ import {
   Settings,
   BarChart,
   Award,
+  Terminal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -34,6 +35,7 @@ const menuItems = {
     { href: "/dashboard/tramites", label: "Gestión Trámites", icon: FileText },
     { href: "/dashboard/materiales", label: "Materiales", icon: Package },
     { href: "/licenciados", label: "Licenciados", icon: Award },
+    { href: "/auditoria", label: "Auditoría", icon: Terminal },
   ],
   DIRECTOR: [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -44,6 +46,7 @@ const menuItems = {
     { href: "/dashboard/tramites", label: "Gestión Trámites", icon: FileText },
     { href: "/dashboard/materiales", label: "Materiales", icon: Package },
     { href: "/licenciados", label: "Licenciados", icon: Award },
+    { href: "/auditoria", label: "Auditoría", icon: Terminal },
   ],
   MEDICO: [
     { href: "/evaluaciones", label: "Evaluaciones", icon: ClipboardCheck },

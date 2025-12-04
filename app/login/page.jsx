@@ -123,6 +123,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                forceUppercase={false}
               />
             </div>
 
@@ -136,6 +137,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  forceUppercase={false}
                 />
                 <Button
                   type="button"

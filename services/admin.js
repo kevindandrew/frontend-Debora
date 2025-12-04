@@ -7,8 +7,18 @@ export const adminService = {
     return response.data;
   },
 
+  async getUsuario(id) {
+    const response = await api.get(`/api/v1/usuarios/${id}`);
+    return response.data;
+  },
+
   async createUsuario(usuarioData) {
     const response = await api.post("/api/v1/usuarios/", usuarioData);
+    return response.data;
+  },
+
+  async updateUsuario(id, usuarioData) {
+    const response = await api.put(`/api/v1/usuarios/${id}`, usuarioData);
     return response.data;
   },
 
@@ -19,7 +29,14 @@ export const adminService = {
 
   // --- UNIDADES ---
   async getUnidades() {
-    const response = await api.get("/api/v1/unidades/");
+    const response = await api.get("/api/v1/unidades");
+    return response.data;
+  },
+
+  async getHistorialPersonal(unidadId) {
+    const response = await api.get(
+      `/api/v1/unidades/${unidadId}/historial-personal`
+    );
     return response.data;
   },
 
@@ -64,6 +81,18 @@ export const adminService = {
     });
 
     return stats;
+  },
+
+  async getEvolucionUsuarios(gestion = new Date().getFullYear()) {
+    const response = await api.get(`/api/v1/estadisticas/evolucion-usuarios`, {
+      params: { gestion },
+    });
+    return response.data;
+  },
+
+  async getSystemLogs() {
+    const response = await api.get("/api/v1/auditoria/logs");
+    return response.data;
   },
 
   // --- POSTULANTES ---
